@@ -21,13 +21,13 @@ app.get('/messages/:channelId', (req: Request, res: Response) => {
     response = {
       hits: Messages.getMessages(channelType)
     }
+    res.json(response);
   } catch (error: any) {
     response = {
       error: error.message
     }
+    res.status(400).json(response);
   }
-  
-  res.json(response);
 });
 
 app.post('/:channelId', (req: Request, res: Response) => {
@@ -46,13 +46,14 @@ app.post('/:channelId', (req: Request, res: Response) => {
     response = {
       success: `New message successfully added to ${channelId} channel.`
     }
+    res.status(201).json(response);
   }
   catch (error: any) {
     response = {
       error: error.message
     }
+    res.status(400).json(response);
   }
-  res.json(response);
 });
 
 app.listen(port, () => {
