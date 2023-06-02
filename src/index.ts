@@ -56,6 +56,12 @@ app.post('/:channelId', (req: Request, res: Response) => {
   }
 });
 
+app.use((req: Request, res: Response) => {
+  res.status(404).json({
+    error: "The end point you try to acccess does not exist"
+  });
+});
+
 app.listen(port, () => {
   console.log(`API server is listening at ${host}:${port}`);
 });
