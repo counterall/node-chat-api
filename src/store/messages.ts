@@ -18,9 +18,7 @@ const getMessages = (channelId: channelType): Message[] => {
 // Add a new message for a specific channel
 const addMessage = (channelId: channelType, message: string) => {
   if (!message) {
-    return {
-      'error': `Cannot add an empty message to channel ${channelId}`
-    }
+    throw new Error(`Cannot add an empty message to channel ${channelId}`);
   }
   const oldMessages: Message[] = messages[channelId] ? [...messages[channelId]] : []
   const newMessageId = oldMessages.length + 1
