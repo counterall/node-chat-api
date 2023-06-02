@@ -9,6 +9,10 @@ const { host, port } = config;
 const app = express();
 app.use(express.json());
 
+app.get('/db', (req: Request, res: Response) => {
+  res.json({ state: appState });
+});
+
 app.get('/channels', (req: Request, res: Response) => {
   res.json({ hits: Channels.getChannels(appState) });
 });
