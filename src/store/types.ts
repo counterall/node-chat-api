@@ -4,14 +4,13 @@ export interface Channel {
 }
 
 export interface Message {
-  id: number;
+  channelId: string;
   text: string;
 }
 
-export interface Messages {
-  music: Message[],
-  movie: Message[],
-  sports: Message[]
+export interface InitialState {
+  channels: Channel[],
+  messages: Message[]
 }
 
 export type channelType = 'music' | 'movie' | 'sports'

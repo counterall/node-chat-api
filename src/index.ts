@@ -3,23 +3,24 @@ import config from './config'
 import { Channels, Messages } from './store'
 import { channelType, Message } from './store/types'
 import { validateChannelId } from './helper';
+import { initialState as appState } from './store/state'
 
 const { host, port } = config;
 const app = express();
 app.use(express.json());
 
 app.get('/channels', (req: Request, res: Response) => {
-  res.json({ hits: Channels.getChannels() });
+  res.json({ hits: Channels.getChannels(appState) });
 });
 
 app.get('/messages/:channelId', (req: Request, res: Response) => {
   const channelId: string = req.params.channelId;
   let response: Message[] | any
   try {
-    validateChannelId(channelId)
+    validateChannelId(appState, channelId)
     const channelType: channelType = channelId as channelType
     response = {
-      hits: Messages.getMessages(channelType)
+      hits: Messages.getMessages(appState, channelType)
     }
     res.json(response);
   } catch (error: any) {
@@ -35,14 +36,14 @@ app.post('/:channelId', (req: Request, res: Response) => {
 
   try {
     const channelId: string = req.params.channelId;
-    validateChannelId(channelId)
+    validateChannelId(appState, channelId)
     const { message }: { message: string } = req.body
     if (!(message && message.length)) {
       throw new Error(`Cannot add an empty message to ${channelId} channel.`);
     }
 
     const channelType: channelType = channelId as channelType
-    Messages.addMessage(channelType, message)
+    Messages.addMessage(appState, channelType, message)
     response = {
       success: `New message successfully added to ${channelId} channel.`
     }
