@@ -2,9 +2,9 @@ import express, { Request, Response } from 'express';
 import config from './config'
 import { Channels, Messages } from './store'
 import { channelType, Message } from './store/types'
+import { validateChannelId } from './helper';
 
-const { host, port, channels } = config;
-const channelIds: string[] = channels.map(c => c.id)
+const { host, port } = config;
 const app = express();
 app.use(express.json());
 
@@ -16,19 +16,14 @@ app.get('/messages/:channelId', (req: Request, res: Response) => {
   const channelId: string = req.params.channelId;
   let response: Message[] | any
   try {
-    if (channelIds.includes(channelId)) {
-      const channelType: channelType = channelId as channelType
-      response = {
-        hits: Messages.getMessages(channelType)
-      }
-    } else {
-      response = {
-        'error': `Invalid Channel Type ${channelId} detected`
-      }
-    }
-  } catch (error) {
+    validateChannelId(channelId)
+    const channelType: channelType = channelId as channelType
     response = {
-      error: `Failed to fetch messages for channel ${channelId}: ${error}`
+      hits: Messages.getMessages(channelType)
+    }
+  } catch (error: any) {
+    response = {
+      error: error.message
     }
   }
   
@@ -40,12 +35,7 @@ app.post('/:channelId', (req: Request, res: Response) => {
 
   try {
     const channelId: string = req.params.channelId;
-    if (!channelId) {
-      throw new Error(`You have given an empty channel ID`);
-    }
-    if (!channelIds.includes(channelId)) {
-      throw new Error(`The ${channelId} channel you tried to add new message to does not exist.`);
-    }
+    validateChannelId(channelId)
     const { message }: { message: string } = req.body
     if (!(message && message.length)) {
       throw new Error(`Cannot add an empty message to ${channelId} channel.`);
