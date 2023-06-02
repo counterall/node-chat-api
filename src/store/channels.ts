@@ -1,22 +1,9 @@
 // Simulate storage for Channel entity
-interface Channel {
-  id: string;
-  name: string;
-}
+import { Channel } from './types'
+import config from '../config'
 
 let channels: Channel[] = [
-  {
-    id: 'music',
-    name: 'Music',
-  },
-  {
-    id: 'movie',
-    name: 'Movie',
-  },
-  {
-    id: 'sports',
-    name: 'Sports',
-  }
+  ...config.channels
 ];
 
 // Get list of predefined channels
