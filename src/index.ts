@@ -1,13 +1,20 @@
-import express, { Request, Response } from 'express';
+import express, { Express, Request, Response } from 'express';
 import config from './config'
 import { Channels, Messages } from './store'
 import { channelType, Message } from './store/types'
 import { validateChannelId } from './helper';
 import { initialState as appState } from './store/state'
+import cors from 'cors'
 
-const { host, port } = config;
-const app = express();
+const { host, port, frontendHost } = config;
+const app: Express = express();
 app.use(express.json());
+
+// Allow frontend app access to this API server
+app.use(cors({
+  origin: frontendHost
+}));
+
 
 app.get('/db', (req: Request, res: Response) => {
   res.json({ state: appState });
