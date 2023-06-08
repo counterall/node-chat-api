@@ -12,6 +12,10 @@ export const initialState: InitialState = {
     {
       id: 'sports',
       name: 'Sports',
+    },
+    {
+      id: 'manga',
+      name: 'Manga'
     }
   ],
   messages: []
